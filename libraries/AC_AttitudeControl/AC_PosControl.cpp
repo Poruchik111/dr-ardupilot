@@ -1038,6 +1038,26 @@ Vector3f AC_PosControl::lean_angles_to_accel(const Vector3f& att_target_euler) c
     };
 }
 
+/// get desired yaw to be passed to the attitude controller
+bool AC_PosControl::get_yaw_cd(float& yaw_cd) const
+{
+    if (!_yaw_target_valid) {
+        return false;
+    }
+    yaw_cd = _yaw_target;
+    return true;
+}
+
+/// get desired yaw rate to be passed to the attitude controller
+bool AC_PosControl::get_yaw_rate_cds(float& yaw_rate_cds) const
+{
+    if (!_yaw_target_valid) {
+        return false;
+    }
+    yaw_rate_cds = _yaw_rate_target;
+    return true;
+}
+
 // returns the NED target acceleration vector for attitude control
 Vector3f AC_PosControl::get_thrust_vector() const
 {
@@ -1216,8 +1236,10 @@ bool AC_PosControl::calculate_yaw_and_rate_yaw()
     if (vel_desired_xy_len > _vel_max_xy_cms * 0.05f) {
         _yaw_target = degrees(_vel_desired.xy().angle()) * 100.0f;
         _yaw_rate_target = turn_rate * degrees(100.0f);
+        _yaw_target_valid = true;
         return true;
     }
+    _yaw_target_valid = false;
     return false;
 }
 
