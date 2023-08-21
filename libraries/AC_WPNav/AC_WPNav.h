@@ -205,7 +205,8 @@ public:
     Vector3f get_thrust_vector() const { return _pos_control.get_thrust_vector(); }
 
     // get target yaw in centi-degrees
-    float get_yaw() const { return _pos_control.get_yaw_cd(); }
+    bool get_yaw(float& yaw_cd) const { return _pos_control.get_yaw_cd(yaw_cd); }
+
     /// advance_wp_target_along_track - move target location along track from origin to destination
     bool advance_wp_target_along_track(float dt);
 
