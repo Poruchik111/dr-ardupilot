@@ -266,8 +266,8 @@ float Mode::AutoYaw::yaw_cd()
     default:
         // point towards next waypoint.
         // we don't use wp_bearing because we don't want the copter to turn too much during flight
-        _yaw_angle_cd = copter.pos_control->get_yaw_cd();
-    break;
+        IGNORE_RETURN(copter.pos_control->get_yaw_cd(_yaw_angle_cd));
+        break;
     }
     
     return _yaw_angle_cd;
@@ -289,7 +289,9 @@ float Mode::AutoYaw::rate_cds()
         break;
 
     case Mode::LOOK_AT_NEXT_WP:
-        _yaw_rate_cds = copter.pos_control->get_yaw_rate_cds();
+        if (!copter.pos_control->get_yaw_rate_cds(_yaw_rate_cds)) {
+            _yaw_rate_cds = 0.0f;
+        }
         break;
 
     case Mode::PILOT_RATE:
